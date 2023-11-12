@@ -103,6 +103,16 @@ namespace GodotPlugins
                 AlcReloadCfg.Configure(alcReloadEnabled: _editorHint);
                 NativeFuncs.Initialize(unmanagedCallbacks, unmanagedCallbacksSize);
 
+                AppDomain.CurrentDomain.AssemblyResolve += (o, args) => {
+                    string folderPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    string assemblyPath = Path.Combine(folderPath, new AssemblyName(args.Name).Name + ".dll");
+                    if (!File.Exists(assemblyPath)) return null;
+                    var ctx = AssemblyLoadContext.GetLoadContext(Assembly.GetExecutingAssembly());
+                    using var f = System.IO.File.OpenRead(assemblyPath);
+                    Assembly assembly = ctx.LoadFromStream(f);
+                    return assembly;
+                };
+
                 if (_editorHint)
                 {
                     _editorApiAssembly = Assembly.Load("GodotSharpEditor");
