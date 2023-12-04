@@ -336,6 +336,23 @@ real_t FastNoiseLite::get_noise_3d(real_t p_x, real_t p_y, real_t p_z) const {
 	return _noise.GetNoise(p_x, p_y, p_z);
 }
 
+Vector2 FastNoiseLite::get_cellular_center_2d() const{
+    Vector2 ret = Vector2();
+    float *coords = _noise.GetCellularCenter();
+    ret.x = coords[0];
+    ret.y = coords[1];
+    return ret;
+}
+
+Vector3 FastNoiseLite::get_cellular_center_3d() const{
+    Vector3 ret = Vector3();
+    float *coords = _noise.GetCellularCenter();
+    ret.x = coords[0];
+    ret.y = coords[1];
+    ret.z = coords[2];
+    return ret;
+}
+
 void FastNoiseLite::_changed() {
 	emit_changed();
 }
@@ -385,6 +402,8 @@ void FastNoiseLite::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("set_cellular_return_type", "ret"), &FastNoiseLite::set_cellular_return_type);
 	ClassDB::bind_method(D_METHOD("get_cellular_return_type"), &FastNoiseLite::get_cellular_return_type);
+	ClassDB::bind_method(D_METHOD("get_cellular_center_2d"), &FastNoiseLite::get_cellular_center_2d);
+	ClassDB::bind_method(D_METHOD("get_cellular_center_3d"), &FastNoiseLite::get_cellular_center_3d);
 
 	// Domain warp.
 

@@ -127,6 +127,9 @@ public:
         mGain = 0.5f;
         mWeightedStrength = 0.0f;
         mPingPongStrength = 2.0f;
+        mNearestX = 1e10f;
+        mNearestY = 1e10f;
+        mNearestZ = 1e10f;
 
         mFractalBounding = 1 / 1.75f;
 
@@ -339,6 +342,18 @@ public:
             return GenFractalPingPong(x, y, z);
         }
     }
+    
+    /// <summary>
+    /// Cellular center of last GetNoise
+    /// </summary>
+    /// <returns>
+    /// Center of cellular noise
+    /// </returns>
+    float* GetCellularCenter() const
+    {
+        float ret [3] = { mNearestX, mNearestY, mNearestZ };
+        return ret;
+    }
 
 
     /// <summary>
@@ -419,6 +434,9 @@ private:
     float mGain;
     float mWeightedStrength;
     float mPingPongStrength;
+    mutable float mNearestX;
+    mutable float mNearestY;
+    mutable float mNearestZ;
 
     float mFractalBounding;
 
@@ -1520,6 +1538,9 @@ private:
                     {
                         distance0 = newDistance;
                         closestHash = hash;
+                        mNearestX = xi + Lookup<float>::RandVecs2D[idx] * cellularJitter;
+                        mNearestY = yi + Lookup<float>::RandVecs2D[idx | 1] * cellularJitter;
+                        mNearestZ = 0.0;
                     }
                     yPrimed += PrimeY;
                 }
@@ -1546,6 +1567,9 @@ private:
                     {
                         distance0 = newDistance;
                         closestHash = hash;
+                        mNearestX = xi + Lookup<float>::RandVecs2D[idx] * cellularJitter;
+                        mNearestY = yi + Lookup<float>::RandVecs2D[idx | 1] * cellularJitter;
+                        mNearestZ = 0.0;
                     }
                     yPrimed += PrimeY;
                 }
@@ -1572,6 +1596,9 @@ private:
                     {
                         distance0 = newDistance;
                         closestHash = hash;
+                        mNearestX = xi + Lookup<float>::RandVecs2D[idx] * cellularJitter;
+                        mNearestY = yi + Lookup<float>::RandVecs2D[idx | 1] * cellularJitter;
+                        mNearestZ = 0.0;
                     }
                     yPrimed += PrimeY;
                 }
@@ -1662,6 +1689,9 @@ private:
                         {
                             distance0 = newDistance;
                             closestHash = hash;
+                            mNearestX = xi + Lookup<float>::RandVecs2D[idx] * cellularJitter;
+                            mNearestY = yi + Lookup<float>::RandVecs2D[idx | 1] * cellularJitter;
+                            mNearestZ = zi + Lookup<float>::RandVecs2D[idx | 2] * cellularJitter;
                         }
                         zPrimed += PrimeZ;
                     }
@@ -1695,6 +1725,9 @@ private:
                         {
                             distance0 = newDistance;
                             closestHash = hash;
+                            mNearestX = xi + Lookup<float>::RandVecs2D[idx] * cellularJitter;
+                            mNearestY = yi + Lookup<float>::RandVecs2D[idx | 1] * cellularJitter;
+                            mNearestZ = zi + Lookup<float>::RandVecs2D[idx | 2] * cellularJitter;
                         }
                         zPrimed += PrimeZ;
                     }
@@ -1728,6 +1761,9 @@ private:
                         {
                             distance0 = newDistance;
                             closestHash = hash;
+                            mNearestX = xi + Lookup<float>::RandVecs2D[idx] * cellularJitter;
+                            mNearestY = yi + Lookup<float>::RandVecs2D[idx | 1] * cellularJitter;
+                            mNearestZ = zi + Lookup<float>::RandVecs2D[idx | 2] * cellularJitter;
                         }
                         zPrimed += PrimeZ;
                     }

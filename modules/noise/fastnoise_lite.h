@@ -179,6 +179,8 @@ public:
 
 	void set_cellular_jitter(real_t p_jitter);
 	real_t get_cellular_jitter() const;
+	Vector2 get_cellular_center_2d() const;
+	Vector3 get_cellular_center_3d() const;
 
 	// Domain warp specific.
 
