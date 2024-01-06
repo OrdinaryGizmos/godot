@@ -1610,6 +1610,13 @@ HashMap<Vector2i, TileSet::TerrainsPattern> TileMapLayer::terrain_fill_constrain
 	// Output map.
 	HashMap<Vector2i, TileSet::TerrainsPattern> output;
 
+    bool nested = false;
+    Ref<TileMapLayer> parent_layer;
+    int parent_layer_count = (tile_map_node->get_layers_count() - 1) - layer_index_in_tile_map_node;
+    if(parent_layer_count > 0){
+        nested = true;
+    }
+
 	// Add all positions to a set.
 	for (int i = 0; i < p_to_replace.size(); i++) {
 		const Vector2i &coords = p_to_replace[i];
@@ -1630,16 +1637,54 @@ HashMap<Vector2i, TileSet::TerrainsPattern> TileMapLayer::terrain_fill_constrain
 		}
 		TileSet::TerrainsPattern pattern = _get_best_terrain_pattern_for_constraints(p_terrain_set, coords, constraints, current_pattern);
 
-		// Update the constraint set with the new ones.
-		RBSet<TerrainConstraint> new_constraints = _get_terrain_constraints_from_added_pattern(coords, p_terrain_set, pattern);
-		for (const TerrainConstraint &E_constraint : new_constraints) {
-			if (constraints.has(E_constraint)) {
-				constraints.erase(E_constraint);
-			}
-			TerrainConstraint c = E_constraint;
-			c.set_priority(5);
-			constraints.insert(c);
-		}
+        // Get layers above present.
+        // Get pattern from above layer
+        // Select NOT value. Foreach bits, check with current pattern.
+        // If AND, remove bit from current pattern.
+        bool remove_center = false;
+        if(nested){
+            for(int pc = 1; pc <= parent_layer_count; pc++){
+                parent_layer = tile_map_node->layers[layer_index_in_tile_map_node + pc];
+                TileMapCell parent_cell = parent_layer->get_cell(coords);
+                if (parent_cell.source_id != TileSet::INVALID_SOURCE) {
+                    TileSetSource *parent_source = *tile_set->get_source(parent_cell.source_id);
+                    TileSetAtlasSource *parent_atlas_source = Object::cast_to<TileSetAtlasSource>(parent_source);
+                    if (parent_atlas_source) {
+                        // Get tile data.
+                        TileData *parent_tile_data = parent_atlas_source->get_tile_data(parent_cell.get_atlas_coords(), parent_cell.alternative_tile);
+                        if (parent_tile_data && parent_tile_data->get_terrain_set() == p_terrain_set) {
+                            TileSet::TerrainsPattern parent_pattern = parent_tile_data->get_terrains_pattern();
+                            for(int b = 0; b < TileSet::CELL_NEIGHBOR_MAX; b++){
+                                if(pattern.bits[b] != -1 && parent_pattern.bits[b] != -1){
+                                    pattern.bits[b] = -1;
+                                }
+                            }
+                            remove_center = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Update the constraint set with the new ones.
+        RBSet<TerrainConstraint> new_constraints = _get_terrain_constraints_from_added_pattern(coords, p_terrain_set, pattern);
+        for (const TerrainConstraint &E_constraint : new_constraints) {
+            if (constraints.has(E_constraint)) {
+                constraints.erase(E_constraint);
+            }
+            TerrainConstraint c = E_constraint;
+            c.set_priority(5);
+            constraints.insert(c);
+        }
+
+        if(remove_center){
+            ///Find the center constraint for this tile and remove it.
+            for (const TerrainConstraint &F_constraint : constraints) {
+                if(F_constraint.is_center_bit() && F_constraint.get_base_cell_coords() == coords){
+                    constraints.erase(F_constraint);
+                }
+            }
+        }
 
 		output[coords] = pattern;
 	}
@@ -1681,7 +1726,7 @@ HashMap<Vector2i, TileSet::TerrainsPattern> TileMapLayer::terrain_fill_connect(c
 	for (Vector2i coords : can_modify_set) {
 		bool connect = false;
 		if (painted_set.has(coords)) {
-			connect = true;
+            connect = true;
 		} else {
 			// Get the center bit of the cell.
 			TileData *tile_data = nullptr;
@@ -1705,12 +1750,38 @@ HashMap<Vector2i, TileSet::TerrainsPattern> TileMapLayer::terrain_fill_connect(c
 
 	RBSet<TerrainConstraint> constraints;
 
+    bool nested = false;
+    Ref<TileMapLayer> parent_layer;
+    int parent_layer_count = (tile_map_node->get_layers_count() - 1) - layer_index_in_tile_map_node;
+    if(parent_layer_count > 0){
+        nested = true;
+    }
+
 	// Add new constraints from the path drawn.
 	for (Vector2i coords : p_coords_array) {
-		// Constraints on the center bit.
-		TerrainConstraint c = TerrainConstraint(tile_map_node, coords, p_terrain);
-		c.set_priority(10);
-		constraints.insert(c);
+		// Constraints on the center bit. Only add if there isn't a tile above this one.
+        TerrainConstraint c = TerrainConstraint(tile_map_node, coords, p_terrain);
+        c.set_priority(10);
+        constraints.insert(c);
+        if(nested){
+            for(int pc = 1; pc <= parent_layer_count; pc++){
+                parent_layer = tile_map_node->layers[layer_index_in_tile_map_node + pc];
+                TileMapCell parent_cell = parent_layer->get_cell(coords);
+                if (parent_cell.source_id != TileSet::INVALID_SOURCE) {
+                    TileSetSource *parent_source = *tile_set->get_source(parent_cell.source_id);
+                    TileSetAtlasSource *parent_atlas_source = Object::cast_to<TileSetAtlasSource>(parent_source);
+                    if (parent_atlas_source) {
+                        // Get tile data.
+                        TileData *parent_tile_data = parent_atlas_source->get_tile_data(parent_cell.get_atlas_coords(), parent_cell.alternative_tile);
+                        if (parent_tile_data && parent_tile_data->get_terrain_set() == p_terrain_set) {
+                            constraints.erase(c);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
 
 		// Constraints on the connecting bits.
 		for (int j = 0; j < TileSet::CELL_NEIGHBOR_MAX; j++) {

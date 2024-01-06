@@ -265,6 +265,9 @@ public:
 	};
 
 	class TerrainsPattern {
+
+    private:
+        friend class TileMapLayer;
 		bool valid = false;
 		int terrain = -1;
 		int bits[TileSet::CELL_NEIGHBOR_MAX];

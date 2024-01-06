@@ -446,6 +446,7 @@ public:
 
 private:
 	friend class TileSetPlugin;
+	friend class TileMapLayer;
 
 	// A compatibility enum to specify how is the data if formatted.
 	mutable TileMapLayer::DataFormat format = TileMapLayer::FORMAT_3;
