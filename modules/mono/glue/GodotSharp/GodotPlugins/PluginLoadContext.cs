@@ -55,18 +55,7 @@ namespace GodotPlugins
             if (assemblyPath != null)
             {
                 AssemblyLoadedPath = assemblyPath;
-
-                // Load in memory to prevent locking the file
-                using var assemblyFile = File.Open(assemblyPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                string pdbPath = Path.ChangeExtension(assemblyPath, ".pdb");
-
-                if (File.Exists(pdbPath))
-                {
-                    using var pdbFile = File.Open(pdbPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                    return LoadFromStream(assemblyFile, pdbFile);
-                }
-
-                return LoadFromStream(assemblyFile);
+                return LoadFromAssemblyPath(assemblyPath);
             }
 
             return null;
