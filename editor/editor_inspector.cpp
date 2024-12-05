@@ -45,6 +45,7 @@
 #include "editor/plugins/script_editor_plugin.h"
 #include "editor/themes/editor_scale.h"
 #include "editor/themes/editor_theme_manager.h"
+#include "scene/gui/box_container.h"
 #include "scene/gui/margin_container.h"
 #include "scene/gui/spin_box.h"
 #include "scene/gui/texture_rect.h"
@@ -3573,7 +3574,7 @@ Object *EditorInspector::get_next_edited_object() {
 }
 
 void EditorInspector::edit(Object *p_object) {
-	if (object == p_object) {
+	if (object == p_object || lock_panel_switching) {
 		return;
 	}
 
@@ -4250,6 +4251,10 @@ Variant EditorInspector::get_property_clipboard() const {
 	return property_clipboard;
 }
 
+void EditorInspector::_pin_button_toggled(bool p_pressed) {
+    lock_panel_switching = p_pressed;
+}
+
 void EditorInspector::_add_meta_confirm() {
 	String name = add_meta_name->get_text();
 
@@ -4356,9 +4361,26 @@ void EditorInspector::_bind_methods() {
 
 EditorInspector::EditorInspector() {
 	object = nullptr;
+	VBoxContainer *outer_vb = memnew(VBoxContainer);
+	outer_vb->set_h_size_flags(SIZE_EXPAND_FILL);
+    
+    add_child(outer_vb);
+
+    
+	HBoxContainer *subresource_hb = memnew(HBoxContainer);
+    subresource_hb->set_h_size_flags(Control::SIZE_EXPAND_FILL);
+    outer_vb->add_child(subresource_hb);
+    pin_button = memnew(Button);
+	subresource_hb->add_child(pin_button);
+	pin_button->set_theme_type_variation("FlatMenuButton");
+	pin_button->set_toggle_mode(true);
+    pin_button->set_text("Pin");
+	pin_button->set_tooltip_text(TTR("Pin Inspected Node"));
+	pin_button->connect(SNAME("toggled"), callable_mp(this, &EditorInspector::_pin_button_toggled));
+    
 	main_vbox = memnew(VBoxContainer);
 	main_vbox->set_h_size_flags(SIZE_EXPAND_FILL);
-	add_child(main_vbox);
+	outer_vb->add_child(main_vbox);
 	set_horizontal_scroll_mode(SCROLL_MODE_DISABLED);
 	set_follow_focus(true);
 

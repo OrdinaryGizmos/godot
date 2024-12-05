@@ -82,6 +82,10 @@ EditorSelection *EditorInterface::get_selection() const {
 	return EditorNode::get_singleton()->get_editor_selection();
 }
 
+EditorPlugin *EditorInterface::get_editor_plugin_screen() const {
+	return EditorNode::get_singleton()->get_editor_plugin_screen();
+}
+
 Ref<EditorSettings> EditorInterface::get_editor_settings() const {
 	return EditorSettings::get_singleton();
 }
@@ -524,6 +528,7 @@ void EditorInterface::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_editor_paths"), &EditorInterface::get_editor_paths);
 	ClassDB::bind_method(D_METHOD("get_resource_previewer"), &EditorInterface::get_resource_previewer);
 	ClassDB::bind_method(D_METHOD("get_selection"), &EditorInterface::get_selection);
+	ClassDB::bind_method(D_METHOD("get_editor_plugin_screen"), &EditorInterface::get_editor_plugin_screen);
 	ClassDB::bind_method(D_METHOD("get_editor_settings"), &EditorInterface::get_editor_settings);
 
 	ClassDB::bind_method(D_METHOD("make_mesh_previews", "meshes", "preview_size"), &EditorInterface::_make_mesh_previews);

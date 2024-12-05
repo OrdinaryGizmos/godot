@@ -41,7 +41,7 @@ String EditorImportPlugin::get_importer_name() const {
 	if (GDVIRTUAL_CALL(_get_importer_name, ret)) {
 		return ret;
 	}
-	ERR_FAIL_V_MSG(String(), "Unimplemented _get_importer_name in add-on.");
+	ERR_FAIL_V_MSG(String(), "Unimplemented _get_importer_name in add-on for resource " + get_resource_type());
 }
 
 String EditorImportPlugin::get_visible_name() const {

@@ -92,6 +92,7 @@ public:
 	EditorPaths *get_editor_paths() const;
 	EditorResourcePreview *get_resource_previewer() const;
 	EditorSelection *get_selection() const;
+	EditorPlugin *get_editor_plugin_screen() const;
 	Ref<EditorSettings> get_editor_settings() const;
 
 	Vector<Ref<Texture2D>> make_mesh_previews(const Vector<Ref<Mesh>> &p_meshes, Vector<Transform3D> *p_transforms, int p_preview_size);

@@ -517,6 +517,7 @@ class EditorInspector : public ScrollContainer {
 	bool sub_inspector = false;
 	bool wide_editors = false;
 	bool deletable_properties = false;
+    bool lock_panel_switching = false;
 
 	float refresh_countdown;
 	bool update_tree_pending = false;
@@ -579,11 +580,13 @@ class EditorInspector : public ScrollContainer {
 	ConfirmationDialog *add_meta_dialog = nullptr;
 	LineEdit *add_meta_name = nullptr;
 	OptionButton *add_meta_type = nullptr;
+    Button *pin_button = nullptr;
 	EditorValidationPanel *validation_panel = nullptr;
 
 	void _add_meta_confirm();
 	void _show_add_meta_dialog();
 	void _check_meta_name();
+    void _pin_button_toggled(bool p_pressed);
 
 protected:
 	static void _bind_methods();
