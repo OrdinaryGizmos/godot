@@ -119,7 +119,8 @@ public:
 	HBoxContainer *get_titlebar_hbox();
 
 	void set_slot(int p_slot_index, bool p_enable_left, int p_type_left, const Color &p_color_left, bool p_enable_right, int p_type_right, const Color &p_color_right, const Ref<Texture2D> &p_custom_left = Ref<Texture2D>(), const Ref<Texture2D> &p_custom_right = Ref<Texture2D>(), bool p_draw_stylebox = true);
-	void clear_slot(int p_slot_index);
+    void swap_slots(int p_slot_index_one, int p_slot_index_two);
+    void clear_slot(int p_slot_index);
 	void clear_all_slots();
 
 	bool is_slot_enabled_left(int p_slot_index) const;
