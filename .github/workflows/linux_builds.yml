@@ -13,6 +13,7 @@ env:
 =======
   # Used for the cache key. Add version suffix to force clean build.
   GODOT_BASE_BRANCH: 4.4
+  GODOT_CPP_BRANCH: 4.4
   SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes strict_checks=yes
 >>>>>>> 30b0aadab6 (Bump version to 4.4.1-rc)
   DOTNET_NOLOGO: true
