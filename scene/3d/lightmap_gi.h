@@ -192,6 +192,8 @@ private:
 	float bias = 0.0005;
 	float texel_scale = 1.0;
 	int max_texture_size = 16384;
+	bool supersampling_enabled = false;
+	float supersampling_factor = 2.0;
 	bool interior = false;
 	EnvironmentMode environment_mode = ENVIRONMENT_MODE_SCENE;
 	Ref<Sky> environment_custom_sky;
@@ -204,6 +206,7 @@ private:
 	Ref<CameraAttributes> camera_attributes;
 
 	Ref<LightmapGIData> light_data;
+	Node *last_owner = nullptr;
 
 	struct LightsFound {
 		Transform3D xform;
@@ -270,7 +273,7 @@ private:
 	void _plot_triangle_into_octree(GenProbesOctree *p_cell, float p_cell_size, const Vector3 *p_triangle);
 	void _gen_new_positions_from_octree(const GenProbesOctree *p_cell, float p_cell_size, const Vector<Vector3> &probe_positions, LocalVector<Vector3> &new_probe_positions, HashMap<Vector3i, bool> &positions_used, const AABB &p_bounds);
 
-	BakeError _save_and_reimport_atlas_textures(const Ref<Lightmapper> p_lightmapper, const String &p_base_name, TypedArray<TextureLayered> &r_textures, bool p_is_shadowmask = false, bool p_compress = false) const;
+	BakeError _save_and_reimport_atlas_textures(const Ref<Lightmapper> p_lightmapper, const String &p_base_name, TypedArray<TextureLayered> &r_textures, bool p_is_shadowmask = false) const;
 
 protected:
 	void _validate_property(PropertyInfo &p_property) const;
@@ -331,6 +334,12 @@ public:
 
 	void set_max_texture_size(int p_size);
 	int get_max_texture_size() const;
+
+	void set_supersampling_enabled(bool p_enable);
+	bool is_supersampling_enabled() const;
+
+	void set_supersampling_factor(float p_factor);
+	float get_supersampling_factor() const;
 
 	void set_generate_probes(GenerateProbes p_generate_probes);
 	GenerateProbes get_generate_probes() const;

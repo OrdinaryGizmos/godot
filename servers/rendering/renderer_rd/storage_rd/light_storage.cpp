@@ -1073,6 +1073,13 @@ void LightStorage::reflection_probe_set_intensity(RID p_probe, float p_intensity
 	reflection_probe->intensity = p_intensity;
 }
 
+void LightStorage::reflection_probe_set_blend_distance(RID p_probe, float p_blend_distance) {
+	ReflectionProbe *reflection_probe = reflection_probe_owner.get_or_null(p_probe);
+	ERR_FAIL_NULL(reflection_probe);
+
+	reflection_probe->blend_distance = p_blend_distance;
+}
+
 void LightStorage::reflection_probe_set_ambient_mode(RID p_probe, RS::ReflectionProbeAmbientMode p_mode) {
 	ReflectionProbe *reflection_probe = reflection_probe_owner.get_or_null(p_probe);
 	ERR_FAIL_NULL(reflection_probe);
@@ -1271,6 +1278,13 @@ float LightStorage::reflection_probe_get_intensity(RID p_probe) const {
 	ERR_FAIL_NULL_V(reflection_probe, 0);
 
 	return reflection_probe->intensity;
+}
+
+float LightStorage::reflection_probe_get_blend_distance(RID p_probe) const {
+	const ReflectionProbe *reflection_probe = reflection_probe_owner.get_or_null(p_probe);
+	ERR_FAIL_NULL_V(reflection_probe, 0);
+
+	return reflection_probe->blend_distance;
 }
 
 bool LightStorage::reflection_probe_is_interior(RID p_probe) const {
@@ -1718,11 +1732,12 @@ void LightStorage::update_reflection_probe_buffer(RenderDataRD *p_render_data, c
 		if (!rpi) {
 			continue;
 		}
-
-		Transform3D transform = rpi->transform;
+		ReflectionProbe *probe = reflection_probe_owner.get_or_null(rpi->probe);
+		Vector3 extents = probe->size / 2;
+		float probe_size = extents.length();
 
 		reflection_sort[reflection_count].probe_instance = rpi;
-		reflection_sort[reflection_count].depth = -p_camera_inverse_transform.xform(transform.origin).z;
+		reflection_sort[reflection_count].size = -probe_size;
 		reflection_count++;
 	}
 
@@ -1762,6 +1777,7 @@ void LightStorage::update_reflection_probe_buffer(RenderDataRD *p_render_data, c
 		reflection_ubo.mask = probe->reflection_mask;
 
 		reflection_ubo.intensity = probe->intensity;
+		reflection_ubo.blend_distance = probe->blend_distance;
 		reflection_ubo.ambient_mode = probe->ambient_mode;
 
 		reflection_ubo.exterior = !probe->interior;
@@ -2559,12 +2575,12 @@ Rect2i LightStorage::get_directional_shadow_rect() {
 	return _get_directional_shadow_rect(directional_shadow.size, directional_shadow.light_count, directional_shadow.current_light);
 }
 
-int LightStorage::get_directional_light_shadow_size(RID p_light_intance) {
+int LightStorage::get_directional_light_shadow_size(RID p_light_instance) {
 	ERR_FAIL_COND_V(directional_shadow.light_count == 0, 0);
 
 	Rect2i r = _get_directional_shadow_rect(directional_shadow.size, directional_shadow.light_count, 0);
 
-	LightInstance *light_instance = light_instance_owner.get_or_null(p_light_intance);
+	LightInstance *light_instance = light_instance_owner.get_or_null(p_light_instance);
 	ERR_FAIL_NULL_V(light_instance, 0);
 
 	switch (light_directional_get_shadow_mode(light_instance->light)) {
