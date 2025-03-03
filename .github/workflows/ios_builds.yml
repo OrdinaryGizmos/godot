@@ -4,11 +4,17 @@ on:
 
 # Global Settings
 env:
+<<<<<<< HEAD
   SCONS_FLAGS: >-
     dev_mode=yes
     module_text_server_fb_enabled=yes
     tests=no
     debug_symbols=no
+=======
+  # Used for the cache key. Add version suffix to force clean build.
+  GODOT_BASE_BRANCH: 4.4
+  SCONSFLAGS: verbose=yes warnings=extra werror=yes debug_symbols=no module_text_server_fb_enabled=yes strict_checks=yes
+>>>>>>> 30b0aadab6 (Bump version to 4.4.1-rc)
 
 jobs:
   ios-template:
