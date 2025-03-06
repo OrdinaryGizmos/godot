@@ -391,7 +391,7 @@ void InspectorDock::_resource_created() {
 }
 
 void InspectorDock::_resource_selected(const Ref<Resource> &p_res, const String &p_property) {
-	if (p_res.is_null()) {
+	if (p_res.is_null() || pin_inspector_object) {
 		return;
 	}
 
@@ -537,6 +537,10 @@ void InspectorDock::clear() {
 }
 
 void InspectorDock::update(Object *p_object) {
+    if(pin_inspector_object){
+        return;
+    }
+    
 	EditorSelectionHistory *editor_history = EditorNode::get_singleton()->get_editor_selection_history();
 
 	backward_button->set_disabled(editor_history->is_at_beginning());
@@ -705,6 +709,10 @@ void InspectorDock::shortcut_input(const Ref<InputEvent> &p_event) {
 	}
 }
 
+void InspectorDock::_pin_button_toggled(bool p_pressed){
+    pin_inspector_object = p_pressed;
+}
+
 InspectorDock::InspectorDock(EditorData &p_editor_data) {
 	singleton = this;
 	set_name("Inspector");
@@ -780,6 +788,15 @@ InspectorDock::InspectorDock(EditorData &p_editor_data) {
 	general_options_hb->add_child(history_menu);
 	history_menu->connect("about_to_popup", callable_mp(this, &InspectorDock::_prepare_history));
 	history_menu->get_popup()->connect(SceneStringName(id_pressed), callable_mp(this, &InspectorDock::_select_history));
+
+    
+    pin_button = memnew(Button);
+	general_options_hb->add_child(pin_button);
+	pin_button->set_theme_type_variation("FlatMenuButton");
+	pin_button->set_toggle_mode(true);
+    pin_button->set_text("Pin");
+	pin_button->set_tooltip_text(TTR("Pin Inspected Node"));
+	pin_button->connect(SNAME("toggled"), callable_mp(this, &InspectorDock::_pin_button_toggled));
 
 	HBoxContainer *subresource_hb = memnew(HBoxContainer);
 	add_child(subresource_hb);

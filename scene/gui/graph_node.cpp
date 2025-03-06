@@ -734,6 +734,13 @@ void GraphNode::set_slot(int p_slot_index, bool p_enable_left, int p_type_left, 
 	emit_signal(SNAME("slot_updated"), p_slot_index);
 }
 
+void GraphNode::swap_slots(int p_slot_index_one, int p_slot_index_two) {
+    Slot slot_from = slot_table[p_slot_index_one];
+    slot_table[p_slot_index_one] = slot_table[p_slot_index_two];
+    slot_table[p_slot_index_two] = slot_from;
+	port_pos_dirty = true;
+}
+
 void GraphNode::clear_slot(int p_slot_index) {
 	slot_table.erase(p_slot_index);
 
@@ -1217,6 +1224,7 @@ void GraphNode::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_titlebar_hbox"), &GraphNode::get_titlebar_hbox);
 
 	ClassDB::bind_method(D_METHOD("set_slot", "slot_index", "enable_left_port", "type_left", "color_left", "enable_right_port", "type_right", "color_right", "custom_icon_left", "custom_icon_right", "draw_stylebox"), &GraphNode::set_slot, DEFVAL(Ref<Texture2D>()), DEFVAL(Ref<Texture2D>()), DEFVAL(true));
+    ClassDB::bind_method(D_METHOD("swap_slots", "slot_index_one", "slot_index_two"), &GraphNode::swap_slots);
 	ClassDB::bind_method(D_METHOD("clear_slot", "slot_index"), &GraphNode::clear_slot);
 	ClassDB::bind_method(D_METHOD("clear_all_slots"), &GraphNode::clear_all_slots);
 

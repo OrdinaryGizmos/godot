@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -151,7 +152,28 @@ namespace GodotPlugins
                 string loadedAssemblyPath = _projectLoadContext.AssemblyLoadedPath ?? assemblyPath;
                 *outLoadedAssemblyPath = Marshaling.ConvertStringToNative(loadedAssemblyPath);
 
+                var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+                List<Assembly> NewAssemblies = new List<Assembly>();
+                loadedAssemblies
+                    .SelectMany(x => x.GetReferencedAssemblies())
+                    .Distinct()
+                    .Where(y => loadedAssemblies.Any((a) => a.FullName == y.FullName) == false
+                               && NewAssemblies.Any((a) => a.FullName == y.FullName) == false)
+                    .ToList()
+                    .ForEach(x => {
+                        var FilePath = $"{Path.GetDirectoryName(_projectLoadContext.AssemblyLoadedPath)}/{x.Name}.dll";
+                        if (File.Exists(FilePath))
+                        {
+                            var (newAss, _newContext) = LoadPlugin(FilePath, isCollectible: _editorHint);
+                            NewAssemblies.Add(newAss);
+                        }
+                    });
+                    
                 ScriptManagerBridge.LookupScriptsInAssembly(projectAssembly);
+                foreach(var Ass in NewAssemblies)
+                {
+                    ScriptManagerBridge.LookupScriptsInAssembly(Ass);
+                }
 
                 return godot_bool.True;
             }

@@ -105,6 +105,7 @@ public:
 	EditorPaths *get_editor_paths() const;
 	EditorResourcePreview *get_resource_previewer() const;
 	EditorSelection *get_selection() const;
+	EditorPlugin *get_editor_plugin_screen() const;
 	Ref<EditorSettings> get_editor_settings() const;
 	EditorToaster *get_editor_toaster() const;
 	EditorUndoRedoManager *get_editor_undo_redo() const;

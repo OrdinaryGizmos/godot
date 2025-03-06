@@ -76,6 +76,9 @@ class InspectorDock : public VBoxContainer {
 	EditorInspector *inspector = nullptr;
 
 	Object *current = nullptr;
+    
+    bool pin_inspector_object = false;
+    Button *pin_button = nullptr;
 
 	Button *backward_button = nullptr;
 	Button *forward_button = nullptr;
@@ -132,6 +135,7 @@ class InspectorDock : public VBoxContainer {
 	void _menu_expand_revertable();
 	void _select_history(int p_idx);
 	void _prepare_history();
+    void _pin_button_toggled(bool p_pressed);
 
 	virtual void shortcut_input(const Ref<InputEvent> &p_event) override;
 
