@@ -184,6 +184,11 @@ Node *EditorSceneFormatImporterBlend::import_scene(const String &p_path, uint32_
 	} else {
 		parameters_map["export_materials"] = "PLACEHOLDER";
 	}
+    
+	if(p_options.has(SNAME("blender/materials/export_unused_images")) && p_options[SNAME("blender/materials/export_unused_images")]){
+        parameters_map["export_unused_images"] = true;
+    }
+    
 	if (p_options.has(SNAME("blender/nodes/cameras")) && p_options[SNAME("blender/nodes/cameras")]) {
 		parameters_map["export_cameras"] = true;
 	} else {
@@ -373,6 +378,7 @@ void EditorSceneFormatImporterBlend::get_import_options(const String &p_path, Li
 	ADD_OPTION_ENUM("blender/meshes/skins", "None,4 Influences (Compatible),All Influences", BLEND_BONE_INFLUENCES_ALL);
 	ADD_OPTION_BOOL("blender/meshes/export_bones_deforming_mesh_only", false);
 	ADD_OPTION_BOOL("blender/materials/unpack_enabled", true);
+	ADD_OPTION_BOOL("blender/materials/export_unused_images", true);
 	ADD_OPTION_ENUM("blender/materials/export_materials", "Placeholder,Export,Named Placeholder", BLEND_MATERIAL_EXPORT_EXPORT);
 	ADD_OPTION_BOOL("blender/animation/limit_playback", true);
 	ADD_OPTION_BOOL("blender/animation/always_sample", true);
