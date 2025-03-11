@@ -226,6 +226,7 @@ void CollisionPolygon3DGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 		a.resize(Mesh::ARRAY_MAX);
 		a[RS::ARRAY_VERTEX] = verts;
 		a[RS::ARRAY_COLOR] = colors;
+		a[RS::ARRAY_COLOR2] = colors;
 		a[RS::ARRAY_INDEX] = indices;
 		array_mesh->add_surface_from_arrays(Mesh::PRIMITIVE_TRIANGLES, a);
 

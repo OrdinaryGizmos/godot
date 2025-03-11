@@ -96,6 +96,19 @@ MeshStorage::MeshStorage() {
 			mesh_default_rd_buffers[DEFAULT_RD_BUFFER_COLOR] = RD::get_singleton()->vertex_buffer_create(buffer.size(), buffer);
 		}
 
+		{ //color2
+			buffer.resize(sizeof(float) * 4);
+			{
+				uint8_t *w = buffer.ptrw();
+				float *fptr = reinterpret_cast<float *>(w);
+				fptr[0] = 1.0;
+				fptr[1] = 1.0;
+				fptr[2] = 1.0;
+				fptr[3] = 1.0;
+			}
+			mesh_default_rd_buffers[DEFAULT_RD_BUFFER_COLOR2] = RD::get_singleton()->vertex_buffer_create(buffer.size(), buffer);
+		}
+
 		{ //tex uv 1
 			buffer.resize(sizeof(float) * 2);
 			{
@@ -289,7 +302,8 @@ void MeshStorage::mesh_add_surface(RID p_mesh, const RS::SurfaceData &p_surface)
 							stride += sizeof(uint16_t) * 2;
 						}
 					} break;
-					case RS::ARRAY_COLOR: {
+                    case RS::ARRAY_COLOR:
+                    case RS::ARRAY_COLOR2: {
 						attrib_stride += sizeof(uint32_t);
 					} break;
 					case RS::ARRAY_TEX_UV: {
@@ -1287,6 +1301,7 @@ RD::VertexFormatID MeshStorage::_mesh_surface_generate_vertex_format(uint64_t p_
 					break;
 				case RS::ARRAY_TANGENT:
 				case RS::ARRAY_COLOR:
+				case RS::ARRAY_COLOR2:
 				case RS::ARRAY_CUSTOM0:
 				case RS::ARRAY_CUSTOM1:
 				case RS::ARRAY_CUSTOM2:
@@ -1342,7 +1357,8 @@ RD::VertexFormatID MeshStorage::_mesh_surface_generate_vertex_format(uint64_t p_
 					vd.stride = 0;
 					vd.format = RD::DATA_FORMAT_R32G32B32A32_SFLOAT;
 				} break;
-				case RS::ARRAY_COLOR: {
+				case RS::ARRAY_COLOR:
+				case RS::ARRAY_COLOR2: {
 					vd.offset = attribute_stride;
 
 					vd.format = RD::DATA_FORMAT_R8G8B8A8_UNORM;
@@ -1473,6 +1489,7 @@ void MeshStorage::_mesh_surface_generate_version_for_input_mask(Mesh::Surface::V
 					buffer = mesh_default_rd_buffers[i];
 					break;
 				case RS::ARRAY_COLOR:
+				case RS::ARRAY_COLOR2:
 				case RS::ARRAY_TEX_UV:
 				case RS::ARRAY_TEX_UV2:
 				case RS::ARRAY_CUSTOM0:

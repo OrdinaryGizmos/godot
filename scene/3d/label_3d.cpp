@@ -648,6 +648,7 @@ void Label3D::_shape() {
 		mesh_array[RS::ARRAY_NORMAL] = E.value.mesh_normals;
 		mesh_array[RS::ARRAY_TANGENT] = E.value.mesh_tangents;
 		mesh_array[RS::ARRAY_COLOR] = E.value.mesh_colors;
+		mesh_array[RS::ARRAY_COLOR2] = E.value.mesh_colors;
 		mesh_array[RS::ARRAY_TEX_UV] = E.value.mesh_uvs;
 		mesh_array[RS::ARRAY_INDEX] = E.value.indices;
 

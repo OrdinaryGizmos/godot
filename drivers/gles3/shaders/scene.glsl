@@ -80,6 +80,7 @@ ARRAY_CUSTOM2 = 8,
 ARRAY_CUSTOM3 = 9,
 ARRAY_BONES = 10, // RGBA16UI (x2 if 8 weights)
 ARRAY_WEIGHTS = 11, // RGBA16UNORM (x2 if 8 weights)
+ARRAY_COLOR2 = 12, // RGBA8
 */
 
 /* INPUT ATTRIBS */
@@ -99,36 +100,41 @@ layout(location = 1) in vec4 axis_tangent_attrib;
 layout(location = 3) in vec4 color_attrib;
 #endif
 
+#if defined(COLOR2_USED)
+layout(location = 4) in vec4 color2_attrib;
+#endif
+
+
 #ifdef UV_USED
-layout(location = 4) in vec2 uv_attrib;
+layout(location = 5) in vec2 uv_attrib;
 #endif
 
 #if defined(UV2_USED) || defined(USE_LIGHTMAP) || defined(RENDER_MATERIAL)
-layout(location = 5) in vec2 uv2_attrib;
+layout(location = 6) in vec2 uv2_attrib;
 #endif
 
 #if defined(CUSTOM0_USED)
-layout(location = 6) in vec4 custom0_attrib;
+layout(location = 7) in vec4 custom0_attrib;
 #endif
 
 #if defined(CUSTOM1_USED)
-layout(location = 7) in vec4 custom1_attrib;
+layout(location = 8) in vec4 custom1_attrib;
 #endif
 
 #if defined(CUSTOM2_USED)
-layout(location = 8) in vec4 custom2_attrib;
+layout(location = 9) in vec4 custom2_attrib;
 #endif
 
 #if defined(CUSTOM3_USED)
-layout(location = 9) in vec4 custom3_attrib;
+layout(location = 10) in vec4 custom3_attrib;
 #endif
 
 #if defined(BONES_USED)
-layout(location = 10) in uvec4 bone_attrib;
+layout(location = 11) in uvec4 bone_attrib;
 #endif
 
 #if defined(WEIGHTS_USED)
-layout(location = 11) in vec4 weight_attrib;
+layout(location = 12) in vec4 weight_attrib;
 #endif
 
 vec3 oct_to_vec3(vec2 e) {
@@ -458,6 +464,11 @@ out vec3 normal_interp;
 #if defined(COLOR_USED)
 out vec4 color_interp;
 #endif
+
+#if defined(COLOR2_USED)
+out vec4 color2_interp;
+#endif
+
 
 #if defined(UV_USED)
 out vec2 uv_interp;
@@ -1857,6 +1868,10 @@ void main() {
 
 #if defined(COLOR_USED)
 	vec4 color = color_interp;
+#endif
+
+#if defined(COLOR2_USED)
+	vec4 color2 = color2_interp;
 #endif
 
 #if defined(NORMAL_MAP_USED)

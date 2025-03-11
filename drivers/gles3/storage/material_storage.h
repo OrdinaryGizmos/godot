@@ -336,6 +336,7 @@ struct SceneShaderData : public ShaderData {
 	bool uses_world_coordinates;
 	bool uses_tangent;
 	bool uses_color;
+	bool uses_color2;
 	bool uses_uv;
 	bool uses_uv2;
 	bool uses_custom0;

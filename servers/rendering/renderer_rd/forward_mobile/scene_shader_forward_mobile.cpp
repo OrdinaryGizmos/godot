@@ -632,7 +632,8 @@ void SceneShaderForwardMobile::init(const String p_defines) {
 		actions.renames["POSITION"] = "position";
 		actions.renames["UV"] = "uv_interp";
 		actions.renames["UV2"] = "uv2_interp";
-		actions.renames["COLOR"] = "color_highp";
+		actions.renames["COLOR"] = "color_interp";
+		actions.renames["COLOR2"] = "color2_interp";
 		actions.renames["POINT_SIZE"] = "gl_PointSize";
 		actions.renames["INSTANCE_ID"] = "gl_InstanceIndex";
 		actions.renames["VERTEX_ID"] = "gl_VertexIndex";
@@ -739,6 +740,7 @@ void SceneShaderForwardMobile::init(const String p_defines) {
 		actions.usage_defines["NORMAL_MAP_DEPTH"] = "@NORMAL_MAP";
 		actions.usage_defines["BENT_NORMAL_MAP"] = "#define BENT_NORMAL_MAP_USED\n";
 		actions.usage_defines["COLOR"] = "#define COLOR_USED\n";
+		actions.usage_defines["COLOR2"] = "#define COLOR2_USED\n";
 		actions.usage_defines["INSTANCE_CUSTOM"] = "#define ENABLE_INSTANCE_CUSTOM\n";
 		actions.usage_defines["POSITION"] = "#define OVERRIDE_POSITION\n";
 		actions.usage_defines["LIGHT_VERTEX"] = "#define LIGHT_VERTEX_USED\n";

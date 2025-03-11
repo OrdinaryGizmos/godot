@@ -221,4 +221,18 @@ void LightmapGIGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 		p_gizmo->add_mesh(mesh);
 	}
+
+	Array array;
+	array.resize(RS::ARRAY_MAX);
+	array[RS::ARRAY_VERTEX] = vertices;
+	array[RS::ARRAY_INDEX] = indices;
+	array[RS::ARRAY_COLOR] = colors;
+	array[RS::ARRAY_COLOR2] = colors;
+
+	Ref<ArrayMesh> mesh;
+	mesh.instantiate();
+	mesh->add_surface_from_arrays(Mesh::PRIMITIVE_TRIANGLES, array, Array(), Dictionary(), 0); //no compression
+	mesh->surface_set_material(0, material_probes);
+
+	p_gizmo->add_mesh(mesh);
 }

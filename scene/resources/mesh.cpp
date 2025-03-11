@@ -649,7 +649,8 @@ Ref<Mesh> Mesh::create_outline(float p_margin) const {
 						arrays[j] = dst;
 
 					} break;
-					case ARRAY_COLOR: {
+					case ARRAY_COLOR:
+					case ARRAY_COLOR2:{
 						Vector<Color> dst = arrays[j];
 						Vector<Color> src = a[j];
 						if (dst.is_empty() || src.is_empty()) {
@@ -836,6 +837,7 @@ void Mesh::_bind_methods() {
 	BIND_ENUM_CONSTANT(ARRAY_NORMAL);
 	BIND_ENUM_CONSTANT(ARRAY_TANGENT);
 	BIND_ENUM_CONSTANT(ARRAY_COLOR);
+	BIND_ENUM_CONSTANT(ARRAY_COLOR2);
 	BIND_ENUM_CONSTANT(ARRAY_TEX_UV);
 	BIND_ENUM_CONSTANT(ARRAY_TEX_UV2);
 	BIND_ENUM_CONSTANT(ARRAY_CUSTOM0);
@@ -861,6 +863,7 @@ void Mesh::_bind_methods() {
 	BIND_BITFIELD_FLAG(ARRAY_FORMAT_NORMAL);
 	BIND_BITFIELD_FLAG(ARRAY_FORMAT_TANGENT);
 	BIND_BITFIELD_FLAG(ARRAY_FORMAT_COLOR);
+	BIND_BITFIELD_FLAG(ARRAY_FORMAT_COLOR2);
 	BIND_BITFIELD_FLAG(ARRAY_FORMAT_TEX_UV);
 	BIND_BITFIELD_FLAG(ARRAY_FORMAT_TEX_UV2);
 	BIND_BITFIELD_FLAG(ARRAY_FORMAT_CUSTOM0);
@@ -1400,6 +1403,7 @@ bool ArrayMesh::_set(const StringName &p_name, const Variant &p_value) {
 			}
 			if (old_format & OLD_ARRAY_FORMAT_COLOR) {
 				new_format |= ARRAY_FORMAT_COLOR;
+				new_format |= ARRAY_FORMAT_COLOR2;
 			}
 			if (old_format & OLD_ARRAY_FORMAT_TEX_UV) {
 				new_format |= ARRAY_FORMAT_TEX_UV;

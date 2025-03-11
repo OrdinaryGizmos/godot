@@ -30,43 +30,47 @@ layout(location = 1) in vec4 axis_tangent_attrib;
 layout(location = 3) in vec4 color_attrib;
 #endif
 
+#if defined(COLOR2_USED)
+layout(location = 4) in vec4 color2_attrib;
+#endif
+
 #ifdef UV_USED
-layout(location = 4) in vec2 uv_attrib;
+layout(location = 5) in vec2 uv_attrib;
 #endif
 
 #if defined(UV2_USED) || defined(USE_LIGHTMAP) || defined(MODE_RENDER_MATERIAL)
-layout(location = 5) in vec2 uv2_attrib;
+layout(location = 6) in vec2 uv2_attrib;
 #endif
 
 #if defined(CUSTOM0_USED)
-layout(location = 6) in vec4 custom0_attrib;
+layout(location = 7) in vec4 custom0_attrib;
 #endif
 
 #if defined(CUSTOM1_USED)
-layout(location = 7) in vec4 custom1_attrib;
+layout(location = 8) in vec4 custom1_attrib;
 #endif
 
 #if defined(CUSTOM2_USED)
-layout(location = 8) in vec4 custom2_attrib;
+layout(location = 9) in vec4 custom2_attrib;
 #endif
 
 #if defined(CUSTOM3_USED)
-layout(location = 9) in vec4 custom3_attrib;
+layout(location = 10) in vec4 custom3_attrib;
 #endif
 
 #if defined(BONES_USED) || defined(USE_PARTICLE_TRAILS)
-layout(location = 10) in uvec4 bone_attrib;
+layout(location = 11) in uvec4 bone_attrib;
 #endif
 
 #if defined(WEIGHTS_USED) || defined(USE_PARTICLE_TRAILS)
-layout(location = 11) in vec4 weight_attrib;
+layout(location = 12) in vec4 weight_attrib;
 #endif
 
 #ifdef MOTION_VECTORS
-layout(location = 12) in vec4 previous_vertex_attrib;
+layout(location = 13) in vec4 previous_vertex_attrib;
 
 #if defined(NORMAL_USED) || defined(TANGENT_USED)
-layout(location = 13) in vec4 previous_normal_attrib;
+layout(location = 14) in vec4 previous_normal_attrib;
 #endif
 
 #endif // MOTION_VECTORS
@@ -100,22 +104,26 @@ layout(location = 1) out vec3 normal_interp;
 layout(location = 2) out vec4 color_interp;
 #endif
 
+#if defined(COLOR2_USED)
+layout(location = 3) out vec4 color2_interp;
+#endif
+
 #ifdef UV_USED
-layout(location = 3) out vec2 uv_interp;
+layout(location = 4) out vec2 uv_interp;
 #endif
 
 #if defined(UV2_USED) || defined(USE_LIGHTMAP)
-layout(location = 4) out vec2 uv2_interp;
+layout(location = 5) out vec2 uv2_interp;
 #endif
 
 #ifdef TANGENT_USED
-layout(location = 5) out vec3 tangent_interp;
-layout(location = 6) out vec3 binormal_interp;
+layout(location = 6) out vec3 tangent_interp;
+layout(location = 7) out vec3 binormal_interp;
 #endif
 
 #ifdef MOTION_VECTORS
-layout(location = 7) out vec4 screen_position;
-layout(location = 8) out vec4 prev_screen_position;
+layout(location = 8) out vec4 screen_position;
+layout(location = 9) out vec4 prev_screen_position;
 #endif
 
 #ifdef MATERIAL_UNIFORMS_USED
@@ -130,11 +138,11 @@ float global_time;
 
 #ifdef MODE_DUAL_PARABOLOID
 
-layout(location = 9) out float dp_clip;
+layout(location = 10) out float dp_clip;
 
 #endif
 
-layout(location = 10) out flat uint instance_index_interp;
+layout(location = 11) out flat uint instance_index_interp;
 
 #ifdef USE_MULTIVIEW
 #extension GL_EXT_multiview : enable
@@ -146,7 +154,7 @@ vec3 multiview_uv(vec2 uv) {
 ivec3 multiview_uv(ivec2 uv) {
 	return ivec3(uv, int(ViewIndex));
 }
-layout(location = 11) out vec4 combined_projected;
+layout(location = 12) out vec4 combined_projected;
 #else // USE_MULTIVIEW
 #define ViewIndex 0
 vec2 multiview_uv(vec2 uv) {
@@ -158,8 +166,8 @@ ivec2 multiview_uv(ivec2 uv) {
 #endif //USE_MULTIVIEW
 
 #if !defined(MODE_RENDER_DEPTH) && !defined(MODE_UNSHADED) && defined(USE_VERTEX_LIGHTING)
-layout(location = 12) out vec4 diffuse_light_interp;
-layout(location = 13) out vec4 specular_light_interp;
+layout(location = 13) highp out vec4 diffuse_light_interp;
+layout(location = 14) highp out vec4 specular_light_interp;
 
 #include "../scene_forward_vertex_lights_inc.glsl"
 
@@ -228,6 +236,9 @@ void vertex_shader(vec3 vertex_input,
 	vec4 instance_custom = vec4(0.0);
 #if defined(COLOR_USED)
 	color_interp = color_attrib;
+#endif
+#if defined(COLOR2_USED)
+	color2_interp = color2_attrib;
 #endif
 
 	mat4 inv_view_matrix = scene_data.inv_view_matrix;
@@ -839,31 +850,35 @@ layout(location = 1) in vec3 normal_interp;
 layout(location = 2) in vec4 color_interp;
 #endif
 
+#if defined(COLOR2_USED)
+layout(location = 3) in vec4 color2_interp;
+#endif
+
 #ifdef UV_USED
-layout(location = 3) in vec2 uv_interp;
+layout(location = 4) in vec2 uv_interp;
 #endif
 
 #if defined(UV2_USED) || defined(USE_LIGHTMAP)
-layout(location = 4) in vec2 uv2_interp;
+layout(location = 5) in vec2 uv2_interp;
 #endif
 
 #ifdef TANGENT_USED
-layout(location = 5) in vec3 tangent_interp;
-layout(location = 6) in vec3 binormal_interp;
+layout(location = 6) in vec3 tangent_interp;
+layout(location = 7) in vec3 binormal_interp;
 #endif
 
 #ifdef MOTION_VECTORS
-layout(location = 7) in vec4 screen_position;
-layout(location = 8) in vec4 prev_screen_position;
+layout(location = 8) in vec4 screen_position;
+layout(location = 9) in vec4 prev_screen_position;
 #endif
 
 #ifdef MODE_DUAL_PARABOLOID
 
-layout(location = 9) in float dp_clip;
+layout(location = 10) in float dp_clip;
 
 #endif
 
-layout(location = 10) in flat uint instance_index_interp;
+layout(location = 11) in flat uint instance_index_interp;
 
 #ifdef USE_LIGHTMAP
 // w0, w1, w2, and w3 are the four cubic B-spline basis functions
@@ -935,7 +950,7 @@ vec3 multiview_uv(vec2 uv) {
 ivec3 multiview_uv(ivec2 uv) {
 	return ivec3(uv, int(ViewIndex));
 }
-layout(location = 11) in vec4 combined_projected;
+layout(location = 12) in vec4 combined_projected;
 #else // USE_MULTIVIEW
 #define ViewIndex 0
 vec2 multiview_uv(vec2 uv) {
@@ -946,8 +961,8 @@ ivec2 multiview_uv(ivec2 uv) {
 }
 #endif // !USE_MULTIVIEW
 #if !defined(MODE_RENDER_DEPTH) && !defined(MODE_UNSHADED) && defined(USE_VERTEX_LIGHTING)
-layout(location = 12) in vec4 diffuse_light_interp;
-layout(location = 13) in vec4 specular_light_interp;
+layout(location = 13) highp in vec4 diffuse_light_interp;
+layout(location = 14) highp in vec4 specular_light_interp;
 #endif
 //defines to keep compatibility with vertex
 
@@ -1211,6 +1226,10 @@ void fragment_shader(in SceneData scene_data) {
 
 #if defined(COLOR_USED)
 	vec4 color = color_interp;
+#endif
+
+#if defined(COLOR2_USED)
+	vec4 color2 = color2_interp;
 #endif
 
 #if defined(NORMAL_MAP_USED)

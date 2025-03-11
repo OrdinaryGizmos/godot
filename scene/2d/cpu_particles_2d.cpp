@@ -223,6 +223,7 @@ void CPUParticles2D::_update_mesh_texture() {
 	arr[RS::ARRAY_VERTEX] = vertices;
 	arr[RS::ARRAY_TEX_UV] = uvs;
 	arr[RS::ARRAY_COLOR] = colors;
+	arr[RS::ARRAY_COLOR2] = colors;
 	arr[RS::ARRAY_INDEX] = indices;
 
 	RS::get_singleton()->mesh_clear(mesh);

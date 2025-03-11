@@ -7,18 +7,19 @@
 #ifdef USE_ATTRIBUTES
 layout(location = 0) in vec2 vertex_attrib;
 layout(location = 3) in vec4 color_attrib;
-layout(location = 4) in vec2 uv_attrib;
+layout(location = 4) in vec4 color2_attrib;
+layout(location = 5) in vec2 uv_attrib;
 
 #if defined(CUSTOM0_USED)
-layout(location = 6) in vec4 custom0_attrib;
+layout(location = 7) in vec4 custom0_attrib;
 #endif
 
 #if defined(CUSTOM1_USED)
-layout(location = 7) in vec4 custom1_attrib;
+layout(location = 8) in vec4 custom1_attrib;
 #endif
 
-layout(location = 10) in uvec4 bone_attrib;
-layout(location = 11) in vec4 weight_attrib;
+layout(location = 11) in uvec4 bone_attrib;
+layout(location = 12) in vec4 weight_attrib;
 
 #endif
 

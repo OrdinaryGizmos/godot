@@ -338,6 +338,7 @@ void SpineMesh2D::update_mesh(const Vector<Point2> &vertices,
             float xy[2] = {(float)vertex.x, (float)vertex.y};
 			memcpy(&vertex_write_buffer[i * vertex_stride + surface_offsets[RS::ARRAY_VERTEX]], xy, sizeof(float) * 2);
 			memcpy(&attribute_write_buffer[i * attribute_stride + surface_offsets[RS::ARRAY_COLOR]], color, 4);
+			memcpy(&attribute_write_buffer[i * attribute_stride + surface_offsets[RS::ARRAY_COLOR2]], color, 4);
 			memcpy(&attribute_write_buffer[i * attribute_stride + surface_offsets[RS::ARRAY_TEX_UV]], uv, sizeof(float) * 2);
 		}
 		RS::get_singleton()->mesh_surface_update_vertex_region(mesh, 0, 0, vertex_buffer);

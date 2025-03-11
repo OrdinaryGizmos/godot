@@ -75,6 +75,7 @@ Ref<ArrayMesh> CylinderShape3D::get_debug_arraymesh_faces(const Color &p_modulat
 
 	Ref<ArrayMesh> cylinder_mesh = memnew(ArrayMesh);
 	cylinder_array[RS::ARRAY_COLOR] = colors;
+	cylinder_array[RS::ARRAY_COLOR2] = colors;
 	cylinder_mesh->add_surface_from_arrays(Mesh::PRIMITIVE_TRIANGLES, cylinder_array);
 	return cylinder_mesh;
 }

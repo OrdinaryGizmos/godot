@@ -278,16 +278,17 @@ public:
 		ARRAY_NORMAL = 1, // RG16
 		ARRAY_TANGENT = 2, // BA16 (with normal) or A16 (with vertex, when compressed)
 		ARRAY_COLOR = 3, // RGBA8
-		ARRAY_TEX_UV = 4, // RG32F or RG16
-		ARRAY_TEX_UV2 = 5, // RG32F or RG16
-		ARRAY_CUSTOM0 = 6, // Depends on ArrayCustomFormat.
-		ARRAY_CUSTOM1 = 7,
-		ARRAY_CUSTOM2 = 8,
-		ARRAY_CUSTOM3 = 9,
-		ARRAY_BONES = 10, // RGBA16UI (x2 if 8 weights)
-		ARRAY_WEIGHTS = 11, // RGBA16UNORM (x2 if 8 weights)
-		ARRAY_INDEX = 12, // 16 or 32 bits depending on length > 0xFFFF.
-		ARRAY_MAX = 13
+		ARRAY_COLOR2 = 4, // RGBA8
+		ARRAY_TEX_UV = 5, // RG32F or RG16
+		ARRAY_TEX_UV2 = 6, // RG32F or RG16
+		ARRAY_CUSTOM0 = 7, // Depends on ArrayCustomFormat.
+		ARRAY_CUSTOM1 = 8,
+		ARRAY_CUSTOM2 = 9,
+		ARRAY_CUSTOM3 = 10,
+		ARRAY_BONES = 11, // RGBA16UI (x2 if 8 weights)
+		ARRAY_WEIGHTS = 12, // RGBA16UNORM (x2 if 8 weights)
+		ARRAY_INDEX = 13, // 16 or 32 bits depending on length > 0xFFFF.
+		ARRAY_MAX = 14
 	};
 
 	enum {
@@ -308,12 +309,13 @@ public:
 
 	enum ArrayFormat : uint64_t {
 		/* ARRAY FORMAT FLAGS */
-		ARRAY_FORMAT_VERTEX = 1 << ARRAY_VERTEX,
-		ARRAY_FORMAT_NORMAL = 1 << ARRAY_NORMAL,
-		ARRAY_FORMAT_TANGENT = 1 << ARRAY_TANGENT,
-		ARRAY_FORMAT_COLOR = 1 << ARRAY_COLOR,
-		ARRAY_FORMAT_TEX_UV = 1 << ARRAY_TEX_UV,
-		ARRAY_FORMAT_TEX_UV2 = 1 << ARRAY_TEX_UV2,
+		ARRAY_FORMAT_VERTEX = 1 << ARRAY_VERTEX, // 12
+		ARRAY_FORMAT_NORMAL = 1 << ARRAY_NORMAL, // 24
+		ARRAY_FORMAT_TANGENT = 1 << ARRAY_TANGENT, // 36
+		ARRAY_FORMAT_COLOR = 1 << ARRAY_COLOR, // 52
+		ARRAY_FORMAT_COLOR2 = 1 << ARRAY_COLOR2, // 68
+		ARRAY_FORMAT_TEX_UV = 1 << ARRAY_TEX_UV, // 72
+		ARRAY_FORMAT_TEX_UV2 = 1 << ARRAY_TEX_UV2, // 80
 		ARRAY_FORMAT_CUSTOM0 = 1 << ARRAY_CUSTOM0,
 		ARRAY_FORMAT_CUSTOM1 = 1 << ARRAY_CUSTOM1,
 		ARRAY_FORMAT_CUSTOM2 = 1 << ARRAY_CUSTOM2,
@@ -368,7 +370,7 @@ public:
 
 		uint64_t format = ARRAY_FLAG_FORMAT_CURRENT_VERSION;
 		Vector<uint8_t> vertex_data; // Vertex, Normal, Tangent (change with skinning, blendshape).
-		Vector<uint8_t> attribute_data; // Color, UV, UV2, Custom0-3.
+		Vector<uint8_t> attribute_data; // Color, Color2, UV, UV2, Custom0-3.
 		Vector<uint8_t> skin_data; // Bone index, Bone weight.
 		uint32_t vertex_count = 0;
 		Vector<uint8_t> index_data;

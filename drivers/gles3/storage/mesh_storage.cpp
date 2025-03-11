@@ -136,7 +136,8 @@ void MeshStorage::mesh_add_surface(RID p_mesh, const RS::SurfaceData &p_surface)
 							stride += sizeof(uint16_t) * 2;
 						}
 					} break;
-					case RS::ARRAY_COLOR: {
+					case RS::ARRAY_COLOR:
+					case RS::ARRAY_COLOR2: {
 						attrib_stride += sizeof(uint32_t);
 					} break;
 					case RS::ARRAY_TEX_UV: {
@@ -945,7 +946,8 @@ void MeshStorage::_mesh_surface_generate_version_for_input_mask(Mesh::Surface::V
 				attribs[i].enabled = false;
 				attribs[i].integer = false;
 			} break;
-			case RS::ARRAY_COLOR: {
+			case RS::ARRAY_COLOR:
+			case RS::ARRAY_COLOR2:{
 				attribs[i].offset = attributes_stride;
 				attribs[i].size = 4;
 				attribs[i].type = GL_UNSIGNED_BYTE;
