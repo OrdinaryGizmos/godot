@@ -2953,6 +2953,10 @@ Error GLTFDocument::_serialize_meshes(Ref<GLTFState> p_state) {
 				if (a.size()) {
 					attributes["COLOR_0"] = _encode_accessor_as_color(p_state, a, true);
 				}
+				Vector<Color> b = array[Mesh::ARRAY_COLOR2];
+				if (b.size()) {
+					attributes["COLOR_1"] = _encode_accessor_as_color(p_state, b, true);
+				}
 			}
 			HashMap<int, int> joint_i_to_bone_i;
 			for (GLTFNodeIndex node_i = 0; node_i < p_state->nodes.size(); node_i++) {
@@ -3403,6 +3407,11 @@ Error GLTFDocument::_parse_meshes(Ref<GLTFState> p_state) {
 			if (a.has("COLOR_0")) {
 				array[Mesh::ARRAY_COLOR] = _decode_accessor_as_color(p_state, a["COLOR_0"], true, indices_mapping);
 				has_vertex_color = true;
+                if (a.has("COLOR_1")) {
+                    array[Mesh::ARRAY_COLOR2] = _decode_accessor_as_color(p_state, a["COLOR_1"], true, indices_mapping);
+                } else{
+                    array[Mesh::ARRAY_COLOR2] = _decode_accessor_as_color(p_state, a["COLOR_0"], true, indices_mapping);
+                }
 			}
 			if (a.has("JOINTS_0") && !a.has("JOINTS_1")) {
 				PackedInt32Array joints_0 = _decode_accessor_as_ints(p_state, a["JOINTS_0"], true, indices_vec4_mapping);

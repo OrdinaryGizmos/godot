@@ -241,6 +241,7 @@ void SpriteBase3D::draw_texture_rect(Ref<Texture2D> p_texture, Rect2 p_dst_rect,
 		memcpy(&vertex_write_buffer[i * normal_tangent_stride + mesh_surface_offsets[RS::ARRAY_NORMAL]], &v_normal, 4);
 		memcpy(&vertex_write_buffer[i * normal_tangent_stride + mesh_surface_offsets[RS::ARRAY_TANGENT]], &v_tangent, 4);
 		memcpy(&attribute_write_buffer[i * attrib_stride + mesh_surface_offsets[RS::ARRAY_COLOR]], v_color, 4);
+		memcpy(&attribute_write_buffer[i * attrib_stride + mesh_surface_offsets[RS::ARRAY_COLOR2]], v_color, 4);
 	}
 
 	RID mesh_new = get_mesh();
@@ -732,6 +733,7 @@ SpriteBase3D::SpriteBase3D() {
 	mesh_array[RS::ARRAY_NORMAL] = mesh_normals;
 	mesh_array[RS::ARRAY_TANGENT] = mesh_tangents;
 	mesh_array[RS::ARRAY_COLOR] = mesh_colors;
+	mesh_array[RS::ARRAY_COLOR2] = mesh_colors;
 	mesh_array[RS::ARRAY_TEX_UV] = mesh_uvs;
 	mesh_array[RS::ARRAY_INDEX] = indices;
 

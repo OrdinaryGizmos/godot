@@ -114,7 +114,7 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 	uint32_t vertex_count = p_points.size();
 	uint32_t stride = 2; //vertices always repeat
 	if ((uint32_t)p_colors.size() == vertex_count || p_colors.size() == 1) {
-		stride += 4;
+		stride += 8;
 	}
 	if ((uint32_t)p_uvs.size() == vertex_count) {
 		stride += 2;
@@ -128,9 +128,9 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 	Vector<uint8_t> polygon_buffer;
 	polygon_buffer.resize(buffer_size * sizeof(float));
 	Vector<RD::VertexAttribute> descriptions;
-	descriptions.resize(5);
+	descriptions.resize(6);
 	Vector<RID> buffers;
-	buffers.resize(5);
+	buffers.resize(6);
 
 	{
 		uint8_t *r = polygon_buffer.ptrw();
@@ -165,6 +165,9 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 			vd.stride = stride * sizeof(float);
 
 			descriptions.write[1] = vd;
+			vd.location = RS::ARRAY_COLOR2;
+			vd.offset = base_offset * (sizeof(float) * 2);
+			descriptions.write[2] = vd;
 
 			if (p_colors.size() == 1) {
 				Color color = p_colors[0];
@@ -173,6 +176,10 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 					fptr[base_offset + i * stride + 1] = color.g;
 					fptr[base_offset + i * stride + 2] = color.b;
 					fptr[base_offset + i * stride + 3] = color.a;
+					fptr[base_offset + i * stride + 4] = color.r;
+					fptr[base_offset + i * stride + 5] = color.g;
+					fptr[base_offset + i * stride + 6] = color.b;
+					fptr[base_offset + i * stride + 7] = color.a;
 				}
 			} else {
 				const Color *color_ptr = p_colors.ptr();
@@ -182,9 +189,13 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 					fptr[base_offset + i * stride + 1] = color_ptr[i].g;
 					fptr[base_offset + i * stride + 2] = color_ptr[i].b;
 					fptr[base_offset + i * stride + 3] = color_ptr[i].a;
+					fptr[base_offset + i * stride + 4] = color_ptr[i].r;
+					fptr[base_offset + i * stride + 5] = color_ptr[i].g;
+					fptr[base_offset + i * stride + 6] = color_ptr[i].b;
+					fptr[base_offset + i * stride + 7] = color_ptr[i].a;
 				}
 			}
-			base_offset += 4;
+			base_offset += 8;
 		} else {
 			RD::VertexAttribute vd;
 			vd.format = RD::DATA_FORMAT_R32G32B32A32_SFLOAT;
@@ -194,6 +205,9 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 
 			descriptions.write[1] = vd;
 			buffers.write[1] = mesh_storage->mesh_get_default_rd_buffer(RendererRD::MeshStorage::DEFAULT_RD_BUFFER_COLOR);
+			vd.location = RS::ARRAY_COLOR2;
+			descriptions.write[2] = vd;
+			buffers.write[2] = mesh_storage->mesh_get_default_rd_buffer(RendererRD::MeshStorage::DEFAULT_RD_BUFFER_COLOR2);
 		}
 
 		//uvs
@@ -204,7 +218,7 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 			vd.location = RS::ARRAY_TEX_UV;
 			vd.stride = stride * sizeof(float);
 
-			descriptions.write[2] = vd;
+			descriptions.write[3] = vd;
 
 			const Vector2 *uv_ptr = p_uvs.ptr();
 
@@ -220,8 +234,8 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 			vd.location = RS::ARRAY_TEX_UV;
 			vd.stride = 0;
 
-			descriptions.write[2] = vd;
-			buffers.write[2] = mesh_storage->mesh_get_default_rd_buffer(RendererRD::MeshStorage::DEFAULT_RD_BUFFER_TEX_UV);
+			descriptions.write[3] = vd;
+			buffers.write[3] = mesh_storage->mesh_get_default_rd_buffer(RendererRD::MeshStorage::DEFAULT_RD_BUFFER_TEX_UV);
 		}
 
 		//bones
@@ -232,7 +246,7 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 			vd.location = RS::ARRAY_BONES;
 			vd.stride = stride * sizeof(float);
 
-			descriptions.write[3] = vd;
+			descriptions.write[4] = vd;
 
 			const int *bone_ptr = p_bones.ptr();
 
@@ -253,8 +267,8 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 			vd.location = RS::ARRAY_BONES;
 			vd.stride = 0;
 
-			descriptions.write[3] = vd;
-			buffers.write[3] = mesh_storage->mesh_get_default_rd_buffer(RendererRD::MeshStorage::DEFAULT_RD_BUFFER_BONES);
+			descriptions.write[4] = vd;
+			buffers.write[4] = mesh_storage->mesh_get_default_rd_buffer(RendererRD::MeshStorage::DEFAULT_RD_BUFFER_BONES);
 		}
 
 		//weights
@@ -265,7 +279,7 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 			vd.location = RS::ARRAY_WEIGHTS;
 			vd.stride = stride * sizeof(float);
 
-			descriptions.write[4] = vd;
+			descriptions.write[5] = vd;
 
 			const float *weight_ptr = p_weights.ptr();
 
@@ -286,8 +300,8 @@ RendererCanvasRender::PolygonID RendererCanvasRenderRD::request_polygon(const Ve
 			vd.location = RS::ARRAY_WEIGHTS;
 			vd.stride = 0;
 
-			descriptions.write[4] = vd;
-			buffers.write[4] = mesh_storage->mesh_get_default_rd_buffer(RendererRD::MeshStorage::DEFAULT_RD_BUFFER_WEIGHTS);
+			descriptions.write[5] = vd;
+			buffers.write[5] = mesh_storage->mesh_get_default_rd_buffer(RendererRD::MeshStorage::DEFAULT_RD_BUFFER_WEIGHTS);
 		}
 
 		//check that everything is as it should be
@@ -1812,6 +1826,7 @@ RendererCanvasRenderRD::RendererCanvasRenderRD() {
 		actions.renames["screen_uv_to_sdf"] = "screen_uv_to_sdf";
 
 		actions.usage_defines["COLOR"] = "#define COLOR_USED\n";
+		actions.usage_defines["COLOR2"] = "#define COLOR2_USED\n";
 		actions.usage_defines["SCREEN_UV"] = "#define SCREEN_UV_USED\n";
 		actions.usage_defines["SCREEN_PIXEL_SIZE"] = "@SCREEN_UV";
 		actions.usage_defines["NORMAL"] = "#define NORMAL_USED\n";

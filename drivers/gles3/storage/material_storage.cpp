@@ -1150,6 +1150,7 @@ MaterialStorage::MaterialStorage() {
 		actions.renames["INSTANCE_CUSTOM"] = "instance_custom";
 
 		actions.renames["COLOR"] = "color";
+		actions.renames["COLOR2"] = "color2";
 		actions.renames["NORMAL"] = "normal";
 		actions.renames["NORMAL_MAP"] = "normal_map";
 		actions.renames["NORMAL_MAP_DEPTH"] = "normal_map_depth";
@@ -1182,6 +1183,7 @@ MaterialStorage::MaterialStorage() {
 		actions.renames["screen_uv_to_sdf"] = "screen_uv_to_sdf";
 
 		actions.usage_defines["COLOR"] = "#define COLOR_USED\n";
+		actions.usage_defines["COLOR2"] = "#define COLOR2_USED\n";
 		actions.usage_defines["SCREEN_UV"] = "#define SCREEN_UV_USED\n";
 		actions.usage_defines["SCREEN_PIXEL_SIZE"] = "@SCREEN_UV";
 		actions.usage_defines["NORMAL"] = "#define NORMAL_USED\n";
@@ -1225,6 +1227,7 @@ MaterialStorage::MaterialStorage() {
 		actions.renames["UV"] = "uv_interp";
 		actions.renames["UV2"] = "uv2_interp";
 		actions.renames["COLOR"] = "color_interp";
+		actions.renames["COLOR2"] = "color2_interp";
 		actions.renames["POINT_SIZE"] = "point_size";
 		actions.renames["INSTANCE_ID"] = "gl_InstanceID";
 		actions.renames["VERTEX_ID"] = "gl_VertexID";
@@ -1327,6 +1330,7 @@ MaterialStorage::MaterialStorage() {
 		actions.usage_defines["NORMAL_MAP"] = "#define NORMAL_MAP_USED\n";
 		actions.usage_defines["NORMAL_MAP_DEPTH"] = "@NORMAL_MAP";
 		actions.usage_defines["COLOR"] = "#define COLOR_USED\n";
+		actions.usage_defines["COLOR2"] = "#define COLOR2_USED\n";
 		actions.usage_defines["INSTANCE_CUSTOM"] = "#define ENABLE_INSTANCE_CUSTOM\n";
 		actions.usage_defines["POSITION"] = "#define OVERRIDE_POSITION\n";
 		actions.usage_defines["LIGHT_VERTEX"] = "#define LIGHT_VERTEX_USED\n";
@@ -1394,6 +1398,7 @@ MaterialStorage::MaterialStorage() {
 		ShaderCompiler::DefaultIdentifierActions actions;
 
 		actions.renames["COLOR"] = "out_color";
+		actions.renames["COLOR2"] = "out_color2";
 		actions.renames["VELOCITY"] = "out_velocity_flags.xyz";
 		actions.renames["MASS"] = "mass";
 		actions.renames["ACTIVE"] = "particle_active";
@@ -1456,6 +1461,7 @@ MaterialStorage::MaterialStorage() {
 		ShaderCompiler::DefaultIdentifierActions actions;
 
 		actions.renames["COLOR"] = "color";
+		actions.renames["COLOR2"] = "color2";
 		actions.renames["ALPHA"] = "alpha";
 		actions.renames["EYEDIR"] = "cube_normal";
 		actions.renames["POSITION"] = "position";
@@ -2985,6 +2991,7 @@ void SceneShaderData::set_code(const String &p_code) {
 	actions.usage_flag_pointers["ANISOTROPY"] = &uses_tangent;
 	actions.usage_flag_pointers["ANISOTROPY_FLOW"] = &uses_tangent;
 	actions.usage_flag_pointers["COLOR"] = &uses_color;
+	actions.usage_flag_pointers["COLOR2"] = &uses_color2;
 	actions.usage_flag_pointers["UV"] = &uses_uv;
 	actions.usage_flag_pointers["UV2"] = &uses_uv2;
 	actions.usage_flag_pointers["CUSTOM0"] = &uses_custom0;
@@ -3012,6 +3019,7 @@ void SceneShaderData::set_code(const String &p_code) {
 	vertex_input_mask = RS::ARRAY_FORMAT_VERTEX | RS::ARRAY_FORMAT_NORMAL; // We can always read vertices and normals.
 	vertex_input_mask |= uses_tangent << RS::ARRAY_TANGENT;
 	vertex_input_mask |= uses_color << RS::ARRAY_COLOR;
+	vertex_input_mask |= uses_color2 << RS::ARRAY_COLOR2;
 	vertex_input_mask |= uses_uv << RS::ARRAY_TEX_UV;
 	vertex_input_mask |= uses_uv2 << RS::ARRAY_TEX_UV2;
 	vertex_input_mask |= uses_custom0 << RS::ARRAY_CUSTOM0;

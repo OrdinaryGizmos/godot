@@ -4364,6 +4364,7 @@ void sky() {
 
 	// MultiMesh may read from color when color is disabled, so make sure that the color defaults to white instead of black;
 	glVertexAttrib4f(RS::ARRAY_COLOR, 1.0, 1.0, 1.0, 1.0);
+	glVertexAttrib4f(RS::ARRAY_COLOR2, 1.0, 1.0, 1.0, 1.0);
 }
 
 RasterizerSceneGLES3::~RasterizerSceneGLES3() {

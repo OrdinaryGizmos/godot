@@ -443,6 +443,7 @@ void EditorNode3DGizmo::add_handles(const Vector<Vector3> &p_handles, const Ref<
 		}
 	}
 	a[RS::ARRAY_COLOR] = colors;
+	a[RS::ARRAY_COLOR2] = colors;
 	mesh->add_surface_from_arrays(Mesh::PRIMITIVE_POINTS, a);
 	mesh->surface_set_material(0, p_material);
 

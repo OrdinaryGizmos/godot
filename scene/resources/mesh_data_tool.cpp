@@ -102,6 +102,10 @@ Error MeshDataTool::create_from_surface(const Ref<ArrayMesh> &p_mesh, int p_surf
 	if (arrays[Mesh::ARRAY_COLOR].get_type() != Variant::NIL) {
 		col = arrays[Mesh::ARRAY_COLOR].operator Vector<Color>().ptr();
 	}
+	const Color *col2 = nullptr;
+	if (arrays[Mesh::ARRAY_COLOR2].get_type() != Variant::NIL) {
+		col2 = arrays[Mesh::ARRAY_COLOR2].operator Vector<Color>().ptr();
+	}
 
 	const int *bo = nullptr;
 	if (arrays[Mesh::ARRAY_BONES].get_type() != Variant::NIL) {
@@ -132,6 +136,9 @@ Error MeshDataTool::create_from_surface(const Ref<ArrayMesh> &p_mesh, int p_surf
 		}
 		if (col) {
 			v.color = col[i];
+		}
+		if (col2) {
+			v.color2 = col2[i];
 		}
 
 		if (we) {
@@ -204,6 +211,8 @@ Error MeshDataTool::commit_to_surface(const Ref<ArrayMesh> &p_mesh, uint64_t p_c
 	Vector<Vector2> u;
 	Vector<Vector2> u2;
 	Vector<Color> c;
+	Vector<Color> c2;
+	Vector<Color> c3;
 	Vector<int> b;
 	Vector<real_t> w;
 	Vector<int> in;
@@ -242,6 +251,12 @@ Error MeshDataTool::commit_to_surface(const Ref<ArrayMesh> &p_mesh, uint64_t p_c
 			col = c.ptrw();
 		}
 
+		Color *col2 = nullptr;
+		if (format & Mesh::ARRAY_FORMAT_COLOR2) {
+			c2.resize(vcount);
+			col2 = c2.ptrw();
+		}
+
 		int *bo = nullptr;
 		if (format & Mesh::ARRAY_FORMAT_BONES) {
 			b.resize(vcount * 4);
@@ -276,6 +291,9 @@ Error MeshDataTool::commit_to_surface(const Ref<ArrayMesh> &p_mesh, uint64_t p_c
 			if (col) {
 				col[i] = vtx.color;
 			}
+			if (col2) {
+				col2[i] = vtx.color2;
+			}
 
 			if (we) {
 				we[i * 4 + 0] = vtx.weights[0];
@@ -309,6 +327,9 @@ Error MeshDataTool::commit_to_surface(const Ref<ArrayMesh> &p_mesh, uint64_t p_c
 	}
 	if (c.size()) {
 		arr[Mesh::ARRAY_COLOR] = c;
+	}
+	if (c2.size()) {
+		arr[Mesh::ARRAY_COLOR2] = c2;
 	}
 	if (u.size()) {
 		arr[Mesh::ARRAY_TEX_UV] = u;

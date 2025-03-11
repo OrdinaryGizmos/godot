@@ -1153,6 +1153,7 @@ void GridMapEditor::_draw_grids(const Vector3 &cell_size) {
 		d.resize(RS::ARRAY_MAX);
 		d[RS::ARRAY_VERTEX] = grid_points[i];
 		d[RS::ARRAY_COLOR] = grid_colors[i];
+		d[RS::ARRAY_COLOR2] = grid_colors[i];
 		RenderingServer::get_singleton()->mesh_add_surface_from_arrays(grid[i], RenderingServer::PRIMITIVE_LINES, d);
 		RenderingServer::get_singleton()->mesh_surface_set_material(grid[i], 0, indicator_mat->get_rid());
 	}

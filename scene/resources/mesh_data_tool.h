@@ -40,6 +40,7 @@ class MeshDataTool : public RefCounted {
 	struct Vertex {
 		Vector3 vertex;
 		Color color;
+		Color color2;
 		Vector3 normal; // normal, binormal, tangent
 		Plane tangent;
 		Vector2 uv;
