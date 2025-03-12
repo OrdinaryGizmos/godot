@@ -46,6 +46,7 @@ protected:
 	StringName tracker_name = "head";
 	StringName pose_name = SceneStringName(default_);
 	Ref<XRPositionalTracker> tracker;
+	Transform3D pose_offset;
 
 	void _validate_property(PropertyInfo &p_property) const;
 
@@ -82,6 +83,7 @@ private:
 	StringName pose_name = SceneStringName(default_);
 	bool has_tracking_data = false;
 	bool show_when_tracked = false;
+	Transform3D pose_offset;
 
 protected:
 	Ref<XRPositionalTracker> tracker;
