@@ -52,6 +52,7 @@ protected:
 
 	void _bind_tracker();
 	void _unbind_tracker();
+	void _notification(int p_what);
 	void _changed_tracker(const StringName &p_tracker_name, int p_tracker_type);
 	void _removed_tracker(const StringName &p_tracker_name, int p_tracker_type);
 	void _pose_changed(const Ref<XRPose> &p_pose);
