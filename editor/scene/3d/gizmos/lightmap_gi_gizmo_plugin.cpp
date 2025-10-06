@@ -224,10 +224,10 @@ void LightmapGIGizmoPlugin::redraw(EditorNode3DGizmo *p_gizmo) {
 
 	Array array;
 	array.resize(RS::ARRAY_MAX);
-	array[RS::ARRAY_VERTEX] = vertices;
-	array[RS::ARRAY_INDEX] = indices;
-	array[RS::ARRAY_COLOR] = colors;
-	array[RS::ARRAY_COLOR2] = colors;
+	array[RS::ARRAY_VERTEX] = Vector<Vector3>(vertices);
+	array[RS::ARRAY_INDEX] = Vector<int>(indices);
+	array[RS::ARRAY_COLOR] = Vector<Color>(colors);
+	array[RS::ARRAY_COLOR2] = Vector<Color>(colors);
 
 	Ref<ArrayMesh> mesh;
 	mesh.instantiate();
