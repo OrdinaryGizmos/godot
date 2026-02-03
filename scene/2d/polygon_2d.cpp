@@ -365,6 +365,7 @@ void Polygon2D::_notification(int p_what) {
 				}
 				if (colors.size() == points.size()) {
 					arr[RS::ARRAY_COLOR] = colors;
+					arr[RS::ARRAY_COLOR2] = colors;
 				}
 
 				if (bones.size() == points.size() * 4) {

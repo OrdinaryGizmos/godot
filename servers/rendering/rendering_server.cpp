@@ -700,7 +700,8 @@ Error RenderingServer::_surface_set_data(Array p_arrays, uint64_t p_format, uint
 					}
 				}
 			} break;
-			case RS::ARRAY_COLOR: {
+			case RS::ARRAY_COLOR:
+			case RS::ARRAY_COLOR2: {
 				ERR_FAIL_COND_V(p_arrays[ai].get_type() != Variant::PACKED_COLOR_ARRAY, ERR_INVALID_PARAMETER);
 
 				Vector<Color> array = p_arrays[ai];
@@ -1062,7 +1063,7 @@ void RenderingServer::mesh_surface_make_offsets_from_format(uint64_t p_format, i
 			size_accum = &r_vertex_element_size;
 		} else if (i == RS::ARRAY_NORMAL) {
 			size_accum = &r_normal_element_size;
-		} else if (i == RS::ARRAY_COLOR) {
+		} else if (i == RS::ARRAY_COLOR ) {
 			size_accum = &r_attrib_element_size;
 		} else if (i == RS::ARRAY_BONES) {
 			size_accum = &r_skin_element_size;
@@ -1090,7 +1091,8 @@ void RenderingServer::mesh_surface_make_offsets_from_format(uint64_t p_format, i
 			case RS::ARRAY_TANGENT: {
 				elem_size = (p_format & ARRAY_FLAG_COMPRESS_ATTRIBUTES) ? 0 : 4;
 			} break;
-			case RS::ARRAY_COLOR: {
+			case RS::ARRAY_COLOR:
+			case RS::ARRAY_COLOR2: {
 				elem_size = 4;
 			} break;
 			case RS::ARRAY_TEX_UV: {
@@ -1530,7 +1532,8 @@ Array RenderingServer::_get_array_from_surface(uint64_t p_format, Vector<uint8_t
 					ret[i] = arr;
 				}
 			} break;
-			case RS::ARRAY_COLOR: {
+			case RS::ARRAY_COLOR:
+			case RS::ARRAY_COLOR2: {
 				Vector<Color> arr;
 				arr.resize(p_vertex_len);
 
@@ -2441,6 +2444,7 @@ void RenderingServer::_bind_methods() {
 	BIND_ENUM_CONSTANT(ARRAY_NORMAL);
 	BIND_ENUM_CONSTANT(ARRAY_TANGENT);
 	BIND_ENUM_CONSTANT(ARRAY_COLOR);
+	BIND_ENUM_CONSTANT(ARRAY_COLOR2);
 	BIND_ENUM_CONSTANT(ARRAY_TEX_UV);
 	BIND_ENUM_CONSTANT(ARRAY_TEX_UV2);
 	BIND_ENUM_CONSTANT(ARRAY_CUSTOM0);
@@ -2468,6 +2472,7 @@ void RenderingServer::_bind_methods() {
 	BIND_BITFIELD_FLAG(ARRAY_FORMAT_NORMAL);
 	BIND_BITFIELD_FLAG(ARRAY_FORMAT_TANGENT);
 	BIND_BITFIELD_FLAG(ARRAY_FORMAT_COLOR);
+	BIND_BITFIELD_FLAG(ARRAY_FORMAT_COLOR2);
 	BIND_BITFIELD_FLAG(ARRAY_FORMAT_TEX_UV);
 	BIND_BITFIELD_FLAG(ARRAY_FORMAT_TEX_UV2);
 	BIND_BITFIELD_FLAG(ARRAY_FORMAT_CUSTOM0);

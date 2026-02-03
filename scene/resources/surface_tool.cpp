@@ -491,7 +491,7 @@ Array SurfaceTool::commit_to_arrays() {
 				a[i] = array;
 
 			} break;
-			case Mesh::ARRAY_COLOR: {
+			case Mesh::ARRAY_COLOR:{
 				Vector<Color> array;
 				array.resize(varr_len);
 				Color *w = array.ptrw();
@@ -500,6 +500,19 @@ Array SurfaceTool::commit_to_arrays() {
 					const Vertex &v = vertex_array[idx];
 
 					w[idx] = v.color;
+				}
+
+				a[i] = array;
+			} break;
+			case Mesh::ARRAY_COLOR2: {
+				Vector<Color> array;
+				array.resize(varr_len);
+				Color *w = array.ptrw();
+
+				for (uint32_t idx = 0; idx < vertex_array.size(); idx++) {
+					const Vertex &v = vertex_array[idx];
+
+					w[idx] = v.color2;
 				}
 
 				a[i] = array;
@@ -806,6 +819,7 @@ void SurfaceTool::create_vertex_array_from_arrays(const Array &p_arrays, LocalVe
 	Vector<Vector3> narr = p_arrays[RS::ARRAY_NORMAL];
 	Vector<float> tarr = p_arrays[RS::ARRAY_TANGENT];
 	Vector<Color> carr = p_arrays[RS::ARRAY_COLOR];
+	Vector<Color> c2arr = p_arrays[RS::ARRAY_COLOR2];
 	Vector<Vector2> uvarr = p_arrays[RS::ARRAY_TEX_UV];
 	Vector<Vector2> uv2arr = p_arrays[RS::ARRAY_TEX_UV2];
 	Vector<int> barr = p_arrays[RS::ARRAY_BONES];
@@ -832,6 +846,9 @@ void SurfaceTool::create_vertex_array_from_arrays(const Array &p_arrays, LocalVe
 	}
 	if (carr.size()) {
 		lformat |= RS::ARRAY_FORMAT_COLOR;
+	}
+	if (c2arr.size()) {
+		lformat |= RS::ARRAY_FORMAT_COLOR2;
 	}
 	if (uvarr.size()) {
 		lformat |= RS::ARRAY_FORMAT_TEX_UV;
@@ -887,6 +904,9 @@ void SurfaceTool::create_vertex_array_from_arrays(const Array &p_arrays, LocalVe
 		}
 		if (lformat & RS::ARRAY_FORMAT_COLOR) {
 			v.color = carr[i];
+		}
+		if (lformat & RS::ARRAY_FORMAT_COLOR2) {
+			v.color2 = c2arr[i];
 		}
 		if (lformat & RS::ARRAY_FORMAT_TEX_UV) {
 			v.uv = uvarr[i];

@@ -53,6 +53,7 @@ public:
 		Vector2 uv;
 		Vector2 uv2;
 		Color custom[RS::ARRAY_CUSTOM_COUNT];
+		Color color2;
 
 		Vector3 vertex; // Must be last.
 		// ----------------------------------------------------------------

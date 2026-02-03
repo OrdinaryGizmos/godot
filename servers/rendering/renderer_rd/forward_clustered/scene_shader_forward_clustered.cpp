@@ -717,9 +717,10 @@ void SceneShaderForwardClustered::init(const String p_defines) {
 		actions.renames["UV"] = "uv_interp";
 		actions.renames["UV2"] = "uv2_interp";
 		actions.renames["COLOR"] = "color_interp";
-		actions.renames["POINT_SIZE"] = "point_size";
-		actions.renames["INSTANCE_ID"] = "INSTANCE_INDEX";
-		actions.renames["VERTEX_ID"] = "VERTEX_INDEX";
+		actions.renames["COLOR2"] = "color2_interp";
+		actions.renames["POINT_SIZE"] = "gl_PointSize";
+		actions.renames["INSTANCE_ID"] = "gl_InstanceIndex";
+		actions.renames["VERTEX_ID"] = "gl_VertexIndex";
 		actions.renames["Z_CLIP_SCALE"] = "z_clip_scale";
 
 		actions.renames["ALPHA_SCISSOR_THRESHOLD"] = "alpha_scissor_threshold";
@@ -823,6 +824,7 @@ void SceneShaderForwardClustered::init(const String p_defines) {
 		actions.usage_defines["NORMAL_MAP_DEPTH"] = "@NORMAL_MAP";
 		actions.usage_defines["BENT_NORMAL_MAP"] = "#define BENT_NORMAL_MAP_USED\n";
 		actions.usage_defines["COLOR"] = "#define COLOR_USED\n";
+		actions.usage_defines["COLOR2"] = "#define COLOR2_USED\n";
 		actions.usage_defines["INSTANCE_CUSTOM"] = "#define ENABLE_INSTANCE_CUSTOM\n";
 		actions.usage_defines["POSITION"] = "#define OVERRIDE_POSITION\n";
 		actions.usage_defines["LIGHT_VERTEX"] = "#define LIGHT_VERTEX_USED\n";
@@ -921,7 +923,7 @@ void fragment() {
 	METALLIC = 0.2;
 }
 )");
-		default_material = material_storage->material_allocate();
+	default_material = material_storage->material_allocate();
 		material_storage->material_initialize(default_material);
 		material_storage->material_set_shader(default_material, default_shader);
 

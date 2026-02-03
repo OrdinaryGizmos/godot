@@ -8459,6 +8459,7 @@ void Node3DEditor::_init_grid() {
 		d.resize(RS::ARRAY_MAX);
 		d[RenderingServer::ARRAY_VERTEX] = (Vector<Vector3>)grid_points[c];
 		d[RenderingServer::ARRAY_COLOR] = (Vector<Color>)grid_colors[c];
+		d[RenderingServer::ARRAY_COLOR2] = (Vector<Color>)grid_colors[c];
 		d[RenderingServer::ARRAY_NORMAL] = (Vector<Vector3>)grid_normals[c];
 		RenderingServer::get_singleton()->mesh_add_surface_from_arrays(grid[c], RenderingServer::PRIMITIVE_LINES, d);
 		RenderingServer::get_singleton()->mesh_surface_set_material(grid[c], 0, grid_mat[c]->get_rid());

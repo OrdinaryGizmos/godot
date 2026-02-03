@@ -1340,6 +1340,7 @@ void RasterizerCanvasGLES3::_render_batch(Light *p_lights, uint32_t p_index, Ren
 
 			if (pb->color_disabled && pb->color != Color(1.0, 1.0, 1.0, 1.0)) {
 				glVertexAttrib4f(RS::ARRAY_COLOR, pb->color.r, pb->color.g, pb->color.b, pb->color.a);
+				glVertexAttrib4f(RS::ARRAY_COLOR2, pb->color.r, pb->color.g, pb->color.b, pb->color.a);
 			}
 
 			if (pb->index_buffer != 0) {
@@ -1352,6 +1353,7 @@ void RasterizerCanvasGLES3::_render_batch(Light *p_lights, uint32_t p_index, Ren
 			if (pb->color_disabled && pb->color != Color(1.0, 1.0, 1.0, 1.0)) {
 				// Reset so this doesn't pollute other draw calls.
 				glVertexAttrib4f(RS::ARRAY_COLOR, 1.0, 1.0, 1.0, 1.0);
+				glVertexAttrib4f(RS::ARRAY_COLOR2, 1.0, 1.0, 1.0, 1.0);
 			}
 
 			if (r_render_info) {
@@ -2473,6 +2475,8 @@ RendererCanvasRender::PolygonID RasterizerCanvasGLES3::request_polygon(const Vec
 		if ((uint32_t)p_colors.size() == vertex_count) {
 			glEnableVertexAttribArray(RS::ARRAY_COLOR);
 			glVertexAttribPointer(RS::ARRAY_COLOR, 4, GL_FLOAT, GL_FALSE, stride * sizeof(float), CAST_INT_TO_UCHAR_PTR(base_offset * sizeof(float)));
+			glEnableVertexAttribArray(RS::ARRAY_COLOR2);
+			glVertexAttribPointer(RS::ARRAY_COLOR2, 4, GL_FLOAT, GL_FALSE, stride * sizeof(float), CAST_INT_TO_UCHAR_PTR(base_offset * sizeof(float)));
 
 			const Color *color_ptr = p_colors.ptr();
 
@@ -2485,6 +2489,7 @@ RendererCanvasRender::PolygonID RasterizerCanvasGLES3::request_polygon(const Vec
 			base_offset += 4;
 		} else {
 			glDisableVertexAttribArray(RS::ARRAY_COLOR);
+			glDisableVertexAttribArray(RS::ARRAY_COLOR2);
 			pb.color_disabled = true;
 			pb.color = p_colors.size() == 1 ? p_colors[0] : Color(1.0, 1.0, 1.0, 1.0);
 		}
@@ -2654,6 +2659,7 @@ RasterizerCanvasGLES3::RasterizerCanvasGLES3() {
 	GLES3::Config *config = GLES3::Config::get_singleton();
 
 	glVertexAttrib4f(RS::ARRAY_COLOR, 1.0, 1.0, 1.0, 1.0);
+	glVertexAttrib4f(RS::ARRAY_COLOR2, 1.0, 1.0, 1.0, 1.0);
 
 	polygon_buffers.last_id = 1;
 	// quad buffer
