@@ -49,6 +49,8 @@
 #include "editor/settings/editor_feature_profile.h"
 #include "editor/settings/editor_settings.h"
 #include "editor/themes/editor_scale.h"
+#include "editor/themes/editor_theme_manager.h"
+#include "scene/gui/box_container.h"
 #include "scene/gui/margin_container.h"
 #include "scene/gui/separator.h"
 #include "scene/gui/spin_box.h"
@@ -4926,7 +4928,7 @@ Object *EditorInspector::get_next_edited_object() {
 }
 
 void EditorInspector::edit(Object *p_object) {
-	if (object == p_object) {
+	if (object == p_object || lock_panel_switching) {
 		return;
 	}
 
@@ -5845,6 +5847,24 @@ Variant EditorInspector::get_property_clipboard() {
 	return property_clipboard;
 }
 
+void EditorInspector::_pin_button_toggled(bool p_pressed) {
+    lock_panel_switching = p_pressed;
+}
+
+void EditorInspector::_check_meta_name() {
+	const String meta_name = add_meta_name->get_text();
+
+	if (meta_name.is_empty()) {
+		validation_panel->set_message(EditorValidationPanel::MSG_ID_DEFAULT, TTR("Metadata name can't be empty."), EditorValidationPanel::MSG_ERROR);
+	} else if (!meta_name.is_valid_identifier()) {
+		validation_panel->set_message(EditorValidationPanel::MSG_ID_DEFAULT, TTR("Metadata name must be a valid identifier."), EditorValidationPanel::MSG_ERROR);
+	} else if (object->has_meta(meta_name)) {
+		validation_panel->set_message(EditorValidationPanel::MSG_ID_DEFAULT, vformat(TTR("Metadata with name \"%s\" already exists."), meta_name), EditorValidationPanel::MSG_ERROR);
+	} else if (meta_name[0] == '_') {
+		validation_panel->set_message(EditorValidationPanel::MSG_ID_DEFAULT, TTR("Names starting with _ are reserved for editor-only metadata."), EditorValidationPanel::MSG_ERROR);
+	}
+}
+
 void EditorInspector::_show_add_meta_dialog() {
 	if (!add_meta_dialog) {
 		add_meta_dialog = memnew(AddMetadataDialog());
@@ -5919,6 +5939,17 @@ EditorInspector::EditorInspector() {
 	base_vbox->set_theme_type_variation(SNAME("EditorInspectorContainer"));
 	base_vbox->set_h_size_flags(SIZE_EXPAND_FILL);
 	add_child(base_vbox);
+    
+	HBoxContainer *subresource_hb = memnew(HBoxContainer);
+    subresource_hb->set_h_size_flags(Control::SIZE_EXPAND_FILL);
+    base_vbox->add_child(subresource_hb);
+    pin_button = memnew(Button);
+	subresource_hb->add_child(pin_button);
+	pin_button->set_theme_type_variation("FlatMenuButton");
+	pin_button->set_toggle_mode(true);
+    pin_button->set_text("Pin");
+	pin_button->set_tooltip_text(TTR("Pin Inspected Node"));
+	pin_button->connect(SNAME("toggled"), callable_mp(this, &EditorInspector::_pin_button_toggled));
 
 	begin_vbox = memnew(VBoxContainer);
 	begin_vbox->set_theme_type_variation(SNAME("EditorInspectorContainer"));
@@ -5951,7 +5982,6 @@ EditorInspector::EditorInspector() {
 	main_vbox = memnew(VBoxContainer);
 	main_vbox->set_theme_type_variation(SNAME("EditorInspectorContainer"));
 	base_vbox->add_child(main_vbox);
-
 	set_horizontal_scroll_mode(SCROLL_MODE_DISABLED);
 	set_follow_focus(true);
 
